@@ -1,0 +1,24 @@
+{
+  "name": "bestseller-server",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Best Seller API Server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "cors": "^2.8.5",
+    "axios": "^1.13.2",
+    "cheerio": "^1.1.2",
+    "puppeteer": "^24.29.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
+
