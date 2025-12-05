@@ -244,7 +244,8 @@ const styles = StyleSheet.create({
   adContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginTop: 30,
+    marginBottom: 20
   },
   scrollView: {
     flex: 1,
