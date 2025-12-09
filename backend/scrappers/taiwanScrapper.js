@@ -27,7 +27,7 @@ async function fetchPageBooks(browser) {
             const author = li.querySelector("div.type02_bd-a ul.msg li a")?.innerText.trim() || "";
 
             if (title && author && image && detailHref) {
-                books.push({ title, author, image });
+                books.push({ title, author, image, detailHref });
                 links.push(detailHref);
             }
         }
@@ -123,6 +123,7 @@ function toPublicBook(raw) {
     const trim = value => (value || '').trim();
     return {
         image: trim(raw.image),
+        link: trim(raw.detailHref),
         title: trim(raw.title),
         author: trim(raw.author),
         writerInfo: trim(raw.writerInfo),

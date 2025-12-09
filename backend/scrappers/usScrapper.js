@@ -180,6 +180,8 @@ async function fetchBookDetail(browser, link) {
 
 export default async function usScrapper() {
   const startTime = Date.now();
+  const date = new Date();
+
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -216,6 +218,7 @@ export default async function usScrapper() {
 
   const toPublicBook = book => ({
     image: book.image || '',
+    link: book.link || '',
     title: book.title || '',
     author: book.author || '',
     writerInfo: book.writerInfo || '',
@@ -228,6 +231,10 @@ export default async function usScrapper() {
 
   console.log(`✅ Crawled ${books.length} books and saved to us.json`);
   console.log(`⏱ Done in ${(Date.now() - startTime) / 1000}s`);
+  console.log(`📆 Date ${date.getDate()}`);
+
+
+  
   await browser.close();
 }
 

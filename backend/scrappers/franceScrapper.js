@@ -27,7 +27,7 @@ async function fetchPageBooks(browser) {
             const author = li.querySelector('div a.a-size-small div')?.innerText || '';
 
             if (title && author && image && detailHref) {
-                books.push({ title, author, image });
+                books.push({ title, author, image, detailHref });
                 links.push(detailHref);
             }
         };
@@ -56,6 +56,7 @@ async function fetchBookDetail(browser, link) {
 
 export default async function amazonScrapper() {
     const startTime = Date.now();
+    const date = new Date();
     const browser = await puppeteer.launch({
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -87,6 +88,7 @@ export default async function amazonScrapper() {
 
     console.log(`✅ Crawled ${books.length} books`);
     console.log(`💾 Saved to ${resultPath}`);
+    console.log(`📆 Date ${date.getDate()}`);
     console.log(`⏱ Done in ${(Date.now() - startTime) / 1000}s`);
     await browser.close();
 }
@@ -95,6 +97,7 @@ function toPublicBook(raw) {
     const clean = value => (value || '').trim();
     return {
         image: clean(raw.image),
+        link: clean(raw.detailHref),
         title: clean(raw.title),
         author: clean(raw.author),
         writerInfo: clean(raw.writerInfo),

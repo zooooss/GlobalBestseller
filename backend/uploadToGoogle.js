@@ -14,6 +14,7 @@ function readBooksJSON(filename) {
 
   const rows = data.map((book) => [
     book.image || "",
+    book.link || "",
     book.title || "",
     book.author || "",
     book.writerInfo || "",
@@ -27,7 +28,7 @@ function readBooksJSON(filename) {
 // Batch update multiple sheets
 async function batchUpdateValues(spreadsheetId, valueInputOption, data) {
   const auth = new GoogleAuth({
-    keyFile: "./credentials.json", // your service account JSON
+    keyFile: "./credentials.json", // service account JSON
     scopes: "https://www.googleapis.com/auth/spreadsheets",
   });
 

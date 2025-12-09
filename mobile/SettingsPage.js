@@ -210,7 +210,7 @@ export default function SettingsPage({ navigation }) {
         </View>
 
         <View style={styles.adContainer}>
-          <MyAds type="adaptive" size={BannerAdSize.MEDIUM_RECTANGLE} />
+          <MyAds type="adaptive" size={BannerAdSize.BANNER} />
         </View>
       </ScrollView>
     </View>

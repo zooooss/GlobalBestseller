@@ -16,7 +16,7 @@ async function fetchPageBooks(browser) {
     const books = [];
     const links = [];
 
-    const items = Array.from(document.querySelectorAll('.list_area_wrap > div'));
+    const items = Array.from(document.querySelectorAll('.list_area_wrap div'));
     const allImages = Array.from(document.querySelectorAll('img'));
 
     items.slice(0, 20).forEach((el, idx) => {
@@ -187,7 +187,7 @@ async function fetchBookDetail(browser, link) {
 
       return {
         description,
-        other: plot,
+        plot,
         writerInfo,
       };
     });
@@ -197,12 +197,13 @@ async function fetchBookDetail(browser, link) {
   } catch (err) {
     await detailPage.close();
     console.error(`⚠️ 상세 정보 크롤링 실패 (${link}):`, err.message);
-    return { description: '', other: '', writerInfo: '' };
+    return { description: '', plot: '', writerInfo: '' };
   }
 }
 
 export default async function jpScrapper() {
   const startTime = Date.now();
+  const date = new Date();
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -224,35 +225,25 @@ export default async function jpScrapper() {
       const data =
         res.status === 'fulfilled'
           ? res.value
-          : { description: '', other: '', writerInfo: '' };
+          : { description: '', plot: '', writerInfo: '' };
+      batchBooks[idx].link = batchLinks[idx];
       batchBooks[idx].description = data.description || '';
-      batchBooks[idx].other = data.other || '';
+      batchBooks[idx].contents = data.description || '';
+      batchBooks[idx].plot = data.plot || '';
+      batchBooks[idx].outline = data.plot || '';
       batchBooks[idx].writerInfo = data.writerInfo || '';
+      batchBooks[idx].authorInfo = data.writerInfo || '';
       console.log(`${i + idx + 1}. ${batchBooks[idx].title} ✅`);
     });
   }
 
-  const resultPath = path.join(process.cwd(), '../json_results/japan.json');
-  const sanitized = books.map(toPublicBook);
-  fs.writeFileSync(resultPath, JSON.stringify(sanitized, null, 2), 'utf-8');
+  const resultPath = path.join(process.cwd(), '../json_results/jpbooks.json');
+  fs.writeFileSync(resultPath, JSON.stringify(books, null, 2), 'utf-8');
 
-  console.log(`✅ Crawled ${books.length} books and saved to japan.json`);
+  console.log(`✅ Crawled ${books.length} books and saved to jpbooks.json`);
   console.log(`⏱ Done in ${(Date.now() - startTime) / 1000}s`);
   await browser.close();
 }
 
-function toPublicBook(raw) {
-  const trim = value => (value || '').trim();
-  return {
-    image: trim(raw.image),
-    title: trim(raw.title),
-    author: trim(raw.author),
-    writerInfo: trim(raw.writerInfo),
-    description: trim(raw.description),
-    other: trim(raw.other),
-  };
-}
-
 // Run directly
 jpScrapper();
-

@@ -8,7 +8,7 @@ function sleep(ms) {
 
 async function fetchPageBooks(browser) {
     const page = await browser.newPage();
-    const url = 'https://www.bookschina.com/24hour';
+    const url = 'https://www.kinokuniya.co.jp/disp/CKnRankingPageCList.jsp?dispNo=107002001001&vTp=w';
     await page.goto(url, { waitUntil: 'networkidle2' });
     await sleep(2000);
 
@@ -16,15 +16,15 @@ async function fetchPageBooks(browser) {
         const books = [];
         const links = [];
 
-        const items = document.querySelectorAll('#container div div.listLeft div.bookList ul li');
+        const items = document.querySelectorAll('#main_contents form div.list_area_wrap div');      
         for (let i = 0; i < items.length; i++) {
             if (books.length >= 30) break;
 
             const li = items[i];
-            const detailHref = li.querySelector('div.infor h2 a')?.href || '';
-            const title = li.querySelector('div.infor h2 a')?.innerText || '';
-            const image = li.querySelector('div.cover a img')?.src || '';
-            const author = li.querySelector('div.infor div.author a')?.innerText || '';
+            const detailHref = li.querySelector('div.listrightbloc div.details.mt00 h3 a')?.href || '';
+            const title = li.querySelector('div.listrightbloc div.details.mt00 h3 a')?.innerText || '';
+            const image = li.querySelector('div.listphoto.clearfix a img')?.src || '';
+            const author = li.querySelector('div.listrightbloc div.details.mt00 p')?.innerText || '';
 
             if (title && author && image && detailHref) {
                 books.push({ title, author, image, detailHref });
@@ -44,13 +44,9 @@ async function fetchBookDetail(browser, link) {
     await detailPage.goto(link, { waitUntil: 'networkidle2' });
 
     const data = await detailPage.evaluate(() => {
-        const description = document.querySelector('#brief p')?.innerText.trim() || '';
-        const extraSections = [
-            document.querySelector('#catalogSwitch')?.innerText.trim() || '',
-            document.querySelector('#mindbook')?.innerText.trim() || ''
-        ].filter(Boolean);
-        const other = extraSections.join('\n\n');
-        const writerInfo = document.querySelector('#zuozhejianjie p')?.innerText.trim() || '';
+        const description = document.querySelector('#main_contents div.career_box p:nth-child(4)')?.innerText.trim() || '';
+        const other = document.querySelector('#main_contents div.career_box p:nth-child(2)')?.innerText.trim() || '';
+        const writerInfo = document.querySelector('#main_contents div.career_box p:nth-child(6)')?.innerText.trim() || '';
         return { description, other, writerInfo };
     });
 
@@ -58,7 +54,7 @@ async function fetchBookDetail(browser, link) {
     return data;
 }
 
-export default async function chinaScrapper() {
+export default async function japanScrapper() {
     const startTime = Date.now();
     const date = new Date();
     const browser = await puppeteer.launch({
@@ -86,7 +82,7 @@ export default async function chinaScrapper() {
         });
     }
 
-    const resultPath = path.join(process.cwd(), '../json_results/china.json');
+    const resultPath = path.join(process.cwd(), '../json_results/japan.json');
     const sanitized = books.map(toPublicBook);
     fs.writeFileSync(resultPath, JSON.stringify(sanitized, null, 2), 'utf-8');
 
@@ -111,4 +107,4 @@ function toPublicBook(raw) {
 }
 
 // Run directly
-chinaScrapper();
+japanScrapper();

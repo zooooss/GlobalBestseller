@@ -20,6 +20,7 @@ function cleanText(value = "") {
 
 const toPublicBook = book => ({
   image: book.image || "",
+  link: book.href || "",
   title: book.title || "",
   author: book.author || "",
   writerInfo: book.writerInfo || "",
@@ -29,6 +30,8 @@ const toPublicBook = book => ({
 
 // CAPTCHA issue, cannot proceed with page 2
 async function fetchBooksMain() {
+  const date = new Date();
+
   const browser = await puppeteer.launch({
     headless: false,
     defaultViewport: null,
@@ -80,6 +83,8 @@ async function fetchBooksMain() {
   const resultPath = path.join(process.cwd(), '../json_results/uk.json');
   fs.writeFileSync(resultPath, JSON.stringify(books.map(toPublicBook), null, 2), "utf-8");
   console.log(`Total ${books.length} of books saved to ${resultPath}.`);
+  console.log(`📆 Date ${date.getDate()}`);
+  
 }
 
 async function fetchBookDetail(browser, href) {

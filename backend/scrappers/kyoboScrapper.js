@@ -26,7 +26,7 @@ async function fetchPageBooks(browser) {
       const publisher = authorText.split('·')[1]?.trim() || '';
 
       if (title && author && publisher && image && detailHref) {
-        books.push({ title, author, publisher, image });
+        books.push({ title, author, publisher, image, detailHref });
         links.push(detailHref);
       }
     });
@@ -55,6 +55,7 @@ async function fetchBookDetail(browser, link) {
 
 export default async function kyoboScrapper() {
   const startTime = Date.now();
+  const date = new Date();
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -82,6 +83,7 @@ export default async function kyoboScrapper() {
 
   const toPublicBook = book => ({
     image: book.image || '',
+    link: book.detailHref || '',
     title: book.title || '',
     author: book.author || '',
     writerInfo: book.writerInfo || '',
@@ -94,6 +96,7 @@ export default async function kyoboScrapper() {
 
   console.log(`✅ Crawled ${books.length} books`);
   console.log(`Saved to ${resultPath}`);
+  console.log(`📆 Date ${(Date.now().toString())}`);
   console.log(`Done in ${(Date.now() - startTime) / 1000}s`);
   
   await browser.close();
