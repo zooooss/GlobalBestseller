@@ -417,20 +417,26 @@ export default function MainScreen({ navigation }) {
         </View>
 
         {/* 국가 선택 탭 */}
-        <View style={styles.tabContainer}>
-          {orderedCountryTabs.map(tab => (
-            <TouchableOpacity
-              key={tab.label}
-              style={[styles.countryTab, activeCountryTab === tab.label && styles.activeCountryTab]}
-              onPress={() => setCountryByLabel(tab.label)}
-            >
-              <Text
-                style={[styles.countryTabText, activeCountryTab === tab.label && styles.activeCountryTabText]}
+        <View style={{ borderBottomWidth: 1, borderBottomColor: '#E0E0E0' }}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.tabContainer}
+          >
+            {orderedCountryTabs.map(tab => (
+              <TouchableOpacity
+                key={tab.label}
+                style={[styles.countryTab, activeCountryTab === tab.label && styles.activeCountryTab]}
+                onPress={() => setCountryByLabel(tab.label)}
               >
-                {tab.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text
+                  style={[styles.countryTabText, activeCountryTab === tab.label && styles.activeCountryTabText]}
+                >
+                  {tab.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
 
         {/* 책 목록 */}
@@ -598,8 +604,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 20,
     paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
   },
   countryTab: {
     marginRight: 30,

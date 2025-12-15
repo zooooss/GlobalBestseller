@@ -56,6 +56,7 @@ export const LanguageProvider = ({ children }) => {
   const [languageLabels, setLanguageLabels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const dataCache = React.useRef({});
 
   const sheetUrl = useMemo(() => DATA_SHEETS[country] ?? DATA_SHEETS[0], [country]);
 
@@ -79,10 +80,18 @@ export const LanguageProvider = ({ children }) => {
 
   // 2. Fetch Data (When country/sheetUrl changes)
   const fetchSheets = useCallback(async () => {
+    // Check cache first
+    if (dataCache.current[sheetUrl]) {
+      setData(dataCache.current[sheetUrl]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
       const rows = await fetchSheet(sheetUrl);
+      dataCache.current[sheetUrl] = rows; // Store in cache
       setData(rows);
     } catch (err) {
       console.error('[LanguageContext] fetchSheets error:', err);
