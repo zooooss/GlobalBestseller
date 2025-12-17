@@ -124,7 +124,7 @@ export default function BookDetail({ route, navigation }) {
   const { columnHeaders } = useLanguage(); // LanguageContext 사용
   const { isBookmarked, toggleBookmark } = useBookmark();
   const { colors, isDark } = useTheme();
-  
+
   // 언어 토글 상태 (route에서 받거나 기본값)
   const [language, setLanguage] = useState(languageFromRoute || 'original');
   const [details, setDetails] = useState(null);
@@ -152,7 +152,9 @@ export default function BookDetail({ route, navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.center}>
-          <Text style={{ color: colors.text }}>책 정보를 불러올 수 없습니다.</Text>
+          <Text style={{ color: colors.text }}>
+            책 정보를 불러올 수 없습니다.
+          </Text>
         </View>
       </View>
     );
@@ -353,7 +355,9 @@ export default function BookDetail({ route, navigation }) {
                   details?.description ||
                   'Publisher review information is not available.'}
             </Text>
-            <View style={[styles.adContainer, { marginTop: 20, marginBottom: 20 }]}>
+            <View
+              style={[styles.adContainer, { marginTop: 20, marginBottom: 20 }]}
+            >
               <MyAds type="adaptive" size={BannerAdSize.LARGE_BANNER} />
             </View>
           </View>
@@ -396,16 +400,17 @@ export default function BookDetail({ route, navigation }) {
       >
         {/* 책 커버 및 정보 */}
         <View style={styles.bookHeaderContainer}>
-          <View
-            style={styles.bookHeader}
-          >
+          <View style={styles.bookHeader}>
             <View style={styles.bookImageContainer}>
               {book.image ? (
                 <TouchableOpacity
                   onPress={() => setImageModalVisible(true)}
                   activeOpacity={0.8}
                 >
-                  <Image source={{ uri: book.image }} style={styles.bookImage} />
+                  <Image
+                    source={{ uri: book.image }}
+                    style={styles.bookImage}
+                  />
                 </TouchableOpacity>
               ) : (
                 <View style={[styles.bookImage, styles.imagePlaceholder]}>
@@ -422,7 +427,10 @@ export default function BookDetail({ route, navigation }) {
                       if (canOpen) {
                         await Linking.openURL(book.link);
                       } else {
-                        console.error('[BookDetail] Cannot open URL:', book.link);
+                        console.error(
+                          '[BookDetail] Cannot open URL:',
+                          book.link,
+                        );
                       }
                     } catch (error) {
                       console.error('[BookDetail] Error opening URL:', error);
@@ -436,14 +444,34 @@ export default function BookDetail({ route, navigation }) {
               )}
             </View>
             <View style={styles.bookInfo}>
-              <TouchableOpacity onPress={() => searchTitle(language === 'korean' && book.title_kr ? book.title_kr : book.title)}>
+              <TouchableOpacity
+                onPress={() =>
+                  searchTitle(
+                    language === 'korean' && book.title_kr
+                      ? book.title_kr
+                      : book.title,
+                  )
+                }
+              >
                 <Text style={styles.title}>
-                  {language === 'korean' && book.title_kr ? book.title_kr : book.title}
+                  {language === 'korean' && book.title_kr
+                    ? book.title_kr
+                    : book.title}
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => searchAuthor(language === 'korean' && book.author_kr ? book.author_kr : book.author)}>
+              <TouchableOpacity
+                onPress={() =>
+                  searchAuthor(
+                    language === 'korean' && book.author_kr
+                      ? book.author_kr
+                      : book.author,
+                  )
+                }
+              >
                 <Text style={styles.author}>
-                  {language === 'korean' && book.author_kr ? book.author_kr : (book.author || 'Unknown Author')}
+                  {language === 'korean' && book.author_kr
+                    ? book.author_kr
+                    : book.author || 'Unknown Author'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -525,8 +553,12 @@ export default function BookDetail({ route, navigation }) {
                 </TouchableOpacity>
                 <Text style={styles.modalTitle} numberOfLines={1}>
                   {wikiType === 'title'
-                    ? (language === 'korean' && book.title_kr ? book.title_kr : book.title)
-                    : (language === 'korean' && book.author_kr ? book.author_kr : book.author)}
+                    ? language === 'korean' && book.title_kr
+                      ? book.title_kr
+                      : book.title
+                    : language === 'korean' && book.author_kr
+                    ? book.author_kr
+                    : book.author}
                 </Text>
                 <View style={{ width: 32 }} />
               </View>
@@ -607,289 +639,290 @@ export default function BookDetail({ route, navigation }) {
 }
 
 // 스타일을 함수로 변경하여 테마에 따라 동적으로 생성
-const getStyles = (colors, isDark) => StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.primaryBackground,
-  },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  topHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 50,
-    paddingHorizontal: 20,
-    paddingBottom: 15,
-  },
-  closeButton: {
-    width: 32,
-    height: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerRight: {
-    flexDirection: 'row',
-    gap: 15,
-  },
-  iconButton: {
-    width: 32,
-    height: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  bookHeaderContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  bookHeader: {
-    flexDirection: 'row',
-  },
-  bookHeaderExpanded: {
-    marginBottom: 0,
-  },
-  bookImageContainer: {
-    marginRight: 15,
-  },
-  bookImage: {
-    width: 120,
-    height: 180,
-    borderRadius: 8,
-    resizeMode: 'cover',
-    marginBottom: 12,
-  },
-  imagePlaceholder: {
-    backgroundColor: colors.secondaryBackground,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  placeholderText: {
-    color: colors.secondaryText,
-    fontSize: 12,
-  },
-  bookInfo: {
-    flex: 1,
-  },
-  bookInfoExpanded: {
-    paddingBottom: 0,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: colors.text,
-    marginBottom: 8,
-    lineHeight: 28,
-  },
-  author: {
-    fontSize: 16,
-    color: colors.secondaryText,
-    marginBottom: 12,
-  },
-  descriptionContainer: {
-    marginTop: 4,
-  },
-  descriptionContainerExpanded: {
-    marginTop: 0,
-    marginBottom: 0,
-    paddingBottom: 0,
-  },
-  description: {
-    fontSize: 14,
-    color: colors.secondaryText,
-    lineHeight: 20,
-  },
-  moreButton: {
-    marginTop: 8,
-    alignSelf: 'flex-start',
-    paddingVertical: 4,
-  },
-  moreButtonText: {
-    fontSize: 14,
-    color: colors.link,
-    fontWeight: '500',
-  },
-  viewStoreButton: {
-    backgroundColor: colors.link,
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 120,
-  },
-  viewStoreText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  tabNavigation: {
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    marginBottom: 20,
-  },
-  tab: {
-    paddingBottom: 12,
-    marginRight: 24,
-  },
-  activeTab: {
-    borderBottomWidth: 2,
-    borderBottomColor: colors.link,
-  },
-  tabText: {
-    fontSize: 15,
-    color: colors.secondaryText,
-    fontWeight: '500',
-  },
-  activeTabText: {
-    color: colors.link,
-    fontWeight: '600',
-  },
-  tabContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-  },
-  tabContentTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: colors.text,
-    marginBottom: 12,
-  },
-  tabContentText: {
-    fontSize: 15,
-    color: colors.text,
-    lineHeight: 24,
-  },
-  tabContentSubtitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.text,
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  infoSection: {
-    marginTop: 16,
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
-  loadingContainer: {
-    alignItems: 'center',
-    paddingVertical: 40,
-  },
-  loadingText: {
-    color: colors.secondaryText,
-    marginTop: 10,
-    fontSize: 14,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
-  modalContainer: {
-    height: '90%',
-    backgroundColor: colors.primaryBackground,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -3,
+const getStyles = (colors, isDark) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.primaryBackground,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 20,
-    paddingBottom: 16,
-    backgroundColor: colors.primaryBackground,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  modalTitle: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: colors.text,
-    flex: 1,
-    textAlign: 'center',
-    paddingHorizontal: 8,
-  },
-  modalCloseButton: {
-    width: 32,
-    height: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  webView: {
-    flex: 1,
-  },
-  webViewLoading: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.primaryBackground,
-  },
-  adText: {
-    fontSize: 14,
-    color: colors.secondaryText,
-    fontWeight: '500',
-  },
-  adContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 5,
-    alignItems: 'center',
-  },
-  imageModalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.95)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  imageModalCloseButton: {
-    position: 'absolute',
-    top: 50,
-    right: 20,
-    zIndex: 1000,
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 20,
-  },
-  imageModalContent: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 60,
-  },
-  imageModalImage: {
-    width: Dimensions.get('window').width - 40,
-    height: Dimensions.get('window').height - 120,
-  },
-});
+    center: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+    },
+    topHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingTop: 50,
+      paddingHorizontal: 20,
+      paddingBottom: 15,
+    },
+    closeButton: {
+      width: 32,
+      height: 32,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    headerRight: {
+      flexDirection: 'row',
+      gap: 15,
+    },
+    iconButton: {
+      width: 32,
+      height: 32,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    scrollView: {
+      flex: 1,
+    },
+    bookHeaderContainer: {
+      paddingHorizontal: 20,
+      paddingBottom: 20,
+    },
+    bookHeader: {
+      flexDirection: 'row',
+    },
+    bookHeaderExpanded: {
+      marginBottom: 0,
+    },
+    bookImageContainer: {
+      marginRight: 15,
+    },
+    bookImage: {
+      width: 120,
+      height: 180,
+      borderRadius: 8,
+      resizeMode: 'cover',
+      marginBottom: 12,
+    },
+    imagePlaceholder: {
+      backgroundColor: colors.secondaryBackground,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    placeholderText: {
+      color: colors.secondaryText,
+      fontSize: 12,
+    },
+    bookInfo: {
+      flex: 1,
+    },
+    bookInfoExpanded: {
+      paddingBottom: 0,
+    },
+    title: {
+      fontSize: 22,
+      fontWeight: 'bold',
+      color: colors.text,
+      marginBottom: 8,
+      lineHeight: 28,
+    },
+    author: {
+      fontSize: 16,
+      color: colors.secondaryText,
+      marginBottom: 12,
+    },
+    descriptionContainer: {
+      marginTop: 4,
+    },
+    descriptionContainerExpanded: {
+      marginTop: 0,
+      marginBottom: 0,
+      paddingBottom: 0,
+    },
+    description: {
+      fontSize: 14,
+      color: colors.secondaryText,
+      lineHeight: 20,
+    },
+    moreButton: {
+      marginTop: 8,
+      alignSelf: 'flex-start',
+      paddingVertical: 4,
+    },
+    moreButtonText: {
+      fontSize: 14,
+      color: colors.link,
+      fontWeight: '500',
+    },
+    viewStoreButton: {
+      backgroundColor: colors.link,
+      borderRadius: 8,
+      paddingVertical: 10,
+      paddingHorizontal: 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 120,
+    },
+    viewStoreText: {
+      color: '#fff',
+      fontSize: 12,
+      fontWeight: '600',
+      textAlign: 'center',
+    },
+    tabNavigation: {
+      flexDirection: 'row',
+      paddingHorizontal: 20,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+      marginBottom: 20,
+    },
+    tab: {
+      paddingBottom: 12,
+      marginRight: 24,
+    },
+    activeTab: {
+      borderBottomWidth: 2,
+      borderBottomColor: colors.link,
+    },
+    tabText: {
+      fontSize: 15,
+      color: colors.secondaryText,
+      fontWeight: '500',
+    },
+    activeTabText: {
+      color: colors.link,
+      fontWeight: '600',
+    },
+    tabContent: {
+      paddingHorizontal: 20,
+      paddingBottom: 40,
+    },
+    tabContentTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: colors.text,
+      marginBottom: 12,
+    },
+    tabContentText: {
+      fontSize: 15,
+      color: colors.text,
+      lineHeight: 24,
+    },
+    tabContentSubtitle: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: colors.text,
+      marginTop: 16,
+      marginBottom: 8,
+    },
+    infoSection: {
+      marginTop: 16,
+      paddingTop: 16,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+    },
+    loadingContainer: {
+      alignItems: 'center',
+      paddingVertical: 40,
+    },
+    loadingText: {
+      color: colors.secondaryText,
+      marginTop: 10,
+      fontSize: 14,
+    },
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      justifyContent: 'flex-end',
+    },
+    modalContainer: {
+      height: '85%',
+      backgroundColor: colors.primaryBackground,
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      overflow: 'hidden',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: -3,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
+      elevation: 5,
+    },
+    modalHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+      paddingTop: 20,
+      paddingBottom: 16,
+      backgroundColor: colors.primaryBackground,
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    modalTitle: {
+      fontSize: 17,
+      fontWeight: '600',
+      color: colors.text,
+      flex: 1,
+      textAlign: 'center',
+      paddingHorizontal: 8,
+    },
+    modalCloseButton: {
+      width: 32,
+      height: 32,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    webView: {
+      flex: 1,
+    },
+    webViewLoading: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.primaryBackground,
+    },
+    adText: {
+      fontSize: 14,
+      color: colors.secondaryText,
+      fontWeight: '500',
+    },
+    adContainer: {
+      paddingHorizontal: 20,
+      paddingBottom: 5,
+      alignItems: 'center',
+    },
+    imageModalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.95)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    imageModalCloseButton: {
+      position: 'absolute',
+      top: 50,
+      right: 20,
+      zIndex: 1000,
+      width: 40,
+      height: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      borderRadius: 20,
+    },
+    imageModalContent: {
+      width: Dimensions.get('window').width,
+      height: Dimensions.get('window').height,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 20,
+      paddingVertical: 60,
+    },
+    imageModalImage: {
+      width: Dimensions.get('window').width - 40,
+      height: Dimensions.get('window').height - 120,
+    },
+  });
