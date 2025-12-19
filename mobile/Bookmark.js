@@ -10,11 +10,14 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useBookmark } from './BookmarkContext';
+import { useTheme } from './ThemeContext';
 
 export default function Bookmark({ navigation }) {
   const { bookmarks, removeBookmark } = useBookmark();
   const [sortBy, setSortBy] = useState('new-old');
   const [showSortModal, setShowSortModal] = useState(false);
+  const { colors, isDark } = useTheme();
+  const styles = useMemo(() => getStyles(colors, isDark), [colors, isDark]);
 
   // 정렬된 북마크 목록
   const sortedBookmarks = useMemo(() => {
@@ -113,7 +116,7 @@ export default function Bookmark({ navigation }) {
         style={styles.deleteButton}
         onPress={() => removeBookmark(item.id)}
       >
-        <Icon name="delete-outline" size={24} color="#666" />
+        <Icon name="delete-outline" size={24} color={colors.secondaryText} />
       </TouchableOpacity>
     </View>
   );
@@ -127,9 +130,9 @@ export default function Bookmark({ navigation }) {
           style={styles.sortButton}
           onPress={() => setShowSortModal(true)}
         >
-          <Icon name="sort" size={20} color="#4285F4" />
+          <Icon name="sort" size={20} color={colors.link} />
           <Text style={styles.sortButtonText}>{getSortLabel()}</Text>
-          <Icon name="chevron-down" size={16} color="#4285F4" />
+          <Icon name="chevron-down" size={16} color={colors.link} />
         </TouchableOpacity>
       </View>
 
@@ -165,7 +168,7 @@ export default function Bookmark({ navigation }) {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Sort by</Text>
               <TouchableOpacity onPress={() => setShowSortModal(false)}>
-                <Icon name="close" size={24} color="#000" />
+                <Icon name="close" size={24} color={colors.text} />
               </TouchableOpacity>
             </View>
             {sortOptions.map((option) => (
@@ -187,7 +190,7 @@ export default function Bookmark({ navigation }) {
                   {option.label}
                 </Text>
                 {sortBy === option.value && (
-                  <Icon name="check" size={20} color="#4285F4" />
+                  <Icon name="check" size={20} color={colors.link} />
                 )}
               </TouchableOpacity>
             ))}
@@ -198,10 +201,10 @@ export default function Bookmark({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors, isDark) => StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#fff',
+    backgroundColor: colors.primaryBackground,
   },
   header: {
     flexDirection: 'row',
@@ -210,14 +213,14 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingBottom: 20,
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    backgroundColor: colors.primaryBackground,
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: colors.border,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#000',
+    color: colors.text,
   },
   sortButton: {
     flexDirection: 'row',
@@ -226,11 +229,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: colors.secondaryBackground,
   },
   sortButtonText: {
     fontSize: 14,
-    color: '#4285F4',
+    color: colors.link,
     fontWeight: '500',
   },
   modalOverlay: {
@@ -240,7 +243,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.primaryBackground,
     borderRadius: 12,
     width: '80%',
     maxWidth: 300,
@@ -255,7 +258,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#000',
+    color: colors.text,
   },
   sortOption: {
     flexDirection: 'row',
@@ -267,14 +270,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   sortOptionActive: {
-    backgroundColor: '#E3F2FD',
+    backgroundColor: isDark ? colors.secondaryBackground : '#E3F2FD',
   },
   sortOptionText: {
     fontSize: 16,
-    color: '#333',
+    color: colors.text,
   },
   sortOptionTextActive: {
-    color: '#4285F4',
+    color: colors.link,
     fontWeight: '600',
   },
   listContainer: {
@@ -283,7 +286,7 @@ const styles = StyleSheet.create({
   },
   card: {
     flexDirection: 'row',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: colors.secondaryBackground,
     borderRadius: 10,
     padding: 15,
     marginBottom: 15,
@@ -302,12 +305,12 @@ const styles = StyleSheet.create({
   textContainer: { flex: 1 },
   country: { fontSize: 20, marginBottom: 5 },
   title: {
-    color: '#000',
+    color: colors.text,
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
   },
-  author: { color: '#666', fontSize: 14 },
+  author: { color: colors.secondaryText, fontSize: 14 },
   deleteButton: {
     padding: 10,
     justifyContent: 'center',
@@ -319,12 +322,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyText: {
-    color: '#333',
+    color: colors.text,
     fontSize: 18,
     marginBottom: 10,
   },
   emptySubText: {
-    color: '#666',
+    color: colors.secondaryText,
     fontSize: 14,
   },
 });

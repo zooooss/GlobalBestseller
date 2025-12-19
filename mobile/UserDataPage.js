@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   Text,
@@ -7,9 +7,12 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTheme } from './ThemeContext';
 
 export default function UserDataPage({ navigation }) {
-
+  const { colors } = useTheme();
+  const styles = useMemo(() => getStyles(colors), [colors]);
+  
   return (
     <View style={styles.container}>
       {/* 헤더 */}
@@ -18,13 +21,16 @@ export default function UserDataPage({ navigation }) {
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Icon name="arrow-left" size={24} color="#000" />
+          <Icon name="arrow-left" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>User Data</Text>
         <View style={styles.headerSpacer} />
       </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+      >
         {/* Start Date */}
         <View style={styles.dataItem}>
           <Text style={styles.dataLabel}>Start Date:</Text>
@@ -35,10 +41,10 @@ export default function UserDataPage({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.primaryBackground,
   },
   header: {
     flexDirection: 'row',
@@ -46,9 +52,9 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingBottom: 20,
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    backgroundColor: colors.primaryBackground,
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: colors.border,
   },
   backButton: {
     padding: 8,
@@ -57,7 +63,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#000',
+    color: colors.text,
     flex: 1,
   },
   headerSpacer: {
@@ -75,17 +81,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: colors.border,
   },
   dataLabel: {
     fontSize: 16,
-    color: '#000',
+    color: colors.text,
     flex: 1,
   },
   dataValue: {
     fontSize: 16,
-    color: '#000',
+    color: colors.text,
     fontWeight: '500',
   },
 });
-

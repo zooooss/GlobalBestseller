@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Image, Animated } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from './ThemeContext';
 
 // 번역 데이터 (Google Sheets 기반)
 // 참조: https://docs.google.com/spreadsheets/d/1GoeMU5HbM7g2jujoO5vBI6Z1BH_EjUtnVmV9zWAKpHs/edit?gid=0#gid=0
@@ -29,7 +30,13 @@ const translations = {
   },
   french: {
     title: 'Meilleures ventes mondiales', // Row 13, Column F
-    subtitle: 'Découvrez des livres exceptionnels qui captivent le monde entier !', // Row 14, Column F
+    subtitle:
+      'Découvrez des livres exceptionnels qui captivent le monde entier !', // Row 14, Column F
+  },
+  spanish: {
+    title: 'Superventas mundiales', // Row 13, Column G
+    subtitle:
+      'Descubre libros increíbles de los que todo el mundo está hablando', // Row 14, Column G
   },
 };
 
@@ -38,6 +45,8 @@ export default function SplashPage({ navigation }) {
   const dot1Opacity = useRef(new Animated.Value(0.3)).current;
   const dot2Opacity = useRef(new Animated.Value(0.3)).current;
   const dot3Opacity = useRef(new Animated.Value(0.3)).current;
+  const { colors, isDark } = useTheme();
+  const styles = useMemo(() => getStyles(colors, isDark), [colors, isDark]);
 
   // 언어 설정 불러오기
   useEffect(() => {
@@ -47,17 +56,18 @@ export default function SplashPage({ navigation }) {
         if (savedLanguage) {
           // 저장된 언어를 번역 키로 매핑
           const languageMap = {
-            'Korean': 'korean',
-            'English': 'english',
-            'Japanese': 'japanese',
-            'Chinese': 'chinese',
+            Korean: 'korean',
+            English: 'english',
+            Japanese: 'japanese',
+            Chinese: 'chinese',
             'Traditional Chinese': 'traditionalChinese',
-            'French': 'french',
+            French: 'french',
+            spanish: 'spanish',
           };
           setLanguage(languageMap[savedLanguage] || 'english');
         }
       } catch (error) {
-        console.error('언어 설정 불러오기 실패:', error);
+        console.error('[SplashPage] Failed to load language:', error);
       }
     };
     loadLanguage();
@@ -135,8 +145,8 @@ export default function SplashPage({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Image 
-          source={require('./assets/Frame1.png')} 
+        <Image
+          source={require('./assets/Frame1.png')}
           style={styles.iconImage}
           resizeMode="contain"
         />
@@ -154,10 +164,10 @@ export default function SplashPage({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colors, isDark) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#4285F4',
+    backgroundColor: isDark ? colors.primaryBackground : '#4285F4',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -177,13 +187,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 36,
     fontWeight: 'bold',
-    color: '#fff',
+    color: isDark ? colors.text : '#fff',
     marginBottom: 16,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 18,
-    color: '#E3F2FD',
+    color: isDark ? colors.secondaryText : '#E3F2FD',
     textAlign: 'center',
   },
   dotsContainer: {
@@ -196,7 +206,6 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#E3F2FD',
+    backgroundColor: isDark ? colors.secondaryText : '#E3F2FD',
   },
 });
-
